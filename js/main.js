@@ -3,6 +3,13 @@ const playerName = document.querySelector('.player__name');
 const playerUserId = document.querySelector('.player__userId');
 const noMobileElement = document.querySelector('.noMobile');
 const adsenseBtn = document.querySelector("#adsenseBtn");
+// const referralURL = document.querySelector('#ref_link');
+// const inviteCount = document.querySelector("#invite_count");
+const shareBtn = document.querySelector('#shareRefLink');
+// const copyBtn = document.querySelector('#copyLink')
+
+const botLink = "https://t.me/ILCOIN_Earn_bot/ilcoin?startapp=";
+
 
 //SWAL ALERT
 function showToast(icon, title) {
@@ -92,6 +99,8 @@ adsenseBtn.addEventListener("click", ()=> {
 
 });
 
+
+
 if (window.Telegram && window.Telegram.WebApp) {
   const TELEGRAM = window.Telegram.WebApp;
   console.log(TELEGRAM.initData.start_param);
@@ -118,7 +127,7 @@ if (window.Telegram && window.Telegram.WebApp) {
   const user = TELEGRAM.initDataUnsafe.user;
   if (user) {
     playerName.textContent = `${user.first_name}`;
-    playerUser Id.textContent = `${user.id}`;
+    playerUserId.textContent = `${user.id}`;
     url_tier = user.id;
   } else {
     playerName.textContent = `No user`;
@@ -128,13 +137,13 @@ if (window.Telegram && window.Telegram.WebApp) {
   //referral
   let ref_link = `${botLink + url_tier}`;
   console.log(ref_link);
-  // shareBtn.addEventListener('click', async () => {
-  //   const link = `https://t.me/share/url?url=${encodeURIComponent('join, invite and earn more ')}`;
-  //   await TELEGRAM.openTelegramLink(link);
-  // });
+  shareBtn.addEventListener('click', async () => {
+    const link = `https://t.me/share/url?url=${encodeURIComponent('join, invite and earn more 🪙')}&text=${encodeURIComponent(ref_link)}`;
+    await TELEGRAM.openTelegramLink(link);
+  });
 
   // copyBtn.addEventListener('click', async () => {
-  //   await navigator.clip board.writeText(ref_link);
+  //   await navigator.clipboard.writeText(ref_link);
   //   console.log(`copied successfully, URL: ${ref_link}`)
   // });
 
@@ -145,6 +154,7 @@ if (window.Telegram && window.Telegram.WebApp) {
 
 
 let acc = document.querySelector(".accordion");
+let acc2 = document.querySelector(".accordion2");
 
 acc.addEventListener("click", function () {
   this.classList.toggle("active");
@@ -163,6 +173,26 @@ acc.addEventListener("click", function () {
     document.querySelector(".card").style.boxShadow = "none";
     document.querySelector(".panel").style.borderBottomLeftRadius = "8px";
     document.querySelector(".panel").style.borderBottomRightRadius = "8px";
+  }
+});
+
+acc2.addEventListener("click", function () {
+  this.classList.toggle("active");
+  let panel2 = document.querySelector(".panel2");
+  if (panel2.style.display === "flex") {
+    panel2.style.display = "none";
+    document.querySelector(".card2").style.borderBottomLeftRadius = "8px";
+    document.querySelector(".card2").style.borderBottomRightRadius = "8px";
+    document.querySelector(".card2").style.boxShadow = "0px 1px 6px rgba(95, 243, 208, 0.5)";
+    document.querySelector(".panel2").style.borderBottomLeftRadius = "0";
+    document.querySelector(".panel2").style.borderBottomRightRadius = "0";
+  } else {
+    panel2.style.display = "flex";
+    document.querySelector(".card2").style.borderBottomLeftRadius = "0";
+    document.querySelector(".card2").style.borderBottomRightRadius = "0";
+    document.querySelector(".card2").style.boxShadow = "none";
+    document.querySelector(".panel2").style.borderBottomLeftRadius = "8px";
+    document.querySelector(".panel2").style.borderBottomRightRadius = "8px";
   }
 });
 
@@ -252,3 +282,84 @@ watchAddBtn.addEventListener('click', async () => {
     
 });
 ////////////////////////////////////////////////////////////
+
+//WHEEL
+const wheel_back_btn = document.querySelector("#wheel_back_btn");
+const open_Wheel_btn = document.querySelector("#open_Wheel_btn");
+wheel_back_btn.addEventListener("click", ()=> {
+  const wheel_cont = document.querySelector(".wheel_cont");
+  wheel_cont.style.display="none";
+});
+open_Wheel_btn.addEventListener("click", ()=> {
+  const wheel_cont = document.querySelector(".wheel_cont");
+  wheel_cont.style.display="flex";
+});
+
+const wheelSectionTotal = 6;
+
+function generateRandom(min, max) {
+    var num = Math.floor(Math.random() * (max - min + 1)) + min;
+    return (num === 4) ? generateRandom(min, max) : num;
+}
+
+var landOn = generateRandom(0, 5);
+// console.log("ILK sonuç: "+landOn)
+
+const baseDegree = 360 * 7;
+const spinAniTime = 6000;
+
+var nowDegree = 0;
+const sectionDegree = 360 / wheelSectionTotal;
+
+$(document).ready(function () {
+  /*WHEEL SPIN FUNCTION*/
+  $("#spin").click(function () {
+    spanWheel(landOn);
+  });
+});
+
+function spanWheel(_landOn) {
+  var newBaseDegree = baseDegree + nowDegree - ((baseDegree + nowDegree) % 360);
+  var landOnDegreeCenter = sectionDegree * _landOn;
+  var landOnDegreeOffset = getRandomIntBetween(
+    landOnDegreeCenter - (sectionDegree / 2) * 0.9,
+    landOnDegreeCenter + (sectionDegree / 2) * 0
+  );
+  var landOnDegree = 360 - landOnDegreeOffset;
+
+  var totalDegree = newBaseDegree + landOnDegree;
+  nowDegree = totalDegree;
+
+  $("#inner-wheel").css({
+    transform: "rotate(" + totalDegree + "deg)",
+  });
+
+  let spinReward = "";
+  setTimeout(() => {
+    switch (_landOn){ 
+      case 0: spinReward = "1 ticket"; 
+      break; 
+      case 1: spinReward = "100 coin"; 
+      break; 
+      case 2: spinReward = "10 coin"; 
+      break; 
+      case 3: spinReward = "No luck"; 
+      break; 
+      case 4: spinReward = "10 TON"; 
+      break; 
+      case 5: spinReward = "No luck"; 
+      break; 
+      default: spinReward = "No luck"; 
+      break; 
+    }
+    showClaim(spinReward);
+
+  }, spinAniTime + 500);
+
+  landOn = generateRandom(0, 5);
+  // console.log("yeni sonuç: "+landOn)
+}
+
+function getRandomIntBetween(min, max) {
+  return Math.floor(Math.random() * (max - min) + min);
+}
